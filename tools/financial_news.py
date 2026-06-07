@@ -8,12 +8,9 @@ load_dotenv()
 @tool
 def get_financial_news(company: str) -> str:
     """
-    Use this tool to fetch the latest financial news headlines about
-    any company or financial topic. Input should be a company name or
-    topic like 'Apple', 'Tesla', 'Indian stock market', 'cryptocurrency',
-    'RBI interest rates', 'inflation'. Use this when the user wants to
-    know recent news, market sentiment, or what is happening with a
-    specific company or financial topic.
+    Fetches latest financial news about a company or topic.
+    Input is a simple company name or topic string.
+    Examples: 'Apple', 'Tesla', 'Reliance', 'cryptocurrency', 'inflation'.
     """
     try:
         api_key = os.getenv("NEWS_API_KEY")
@@ -22,7 +19,7 @@ def get_financial_news(company: str) -> str:
 
         url = "https://newsapi.org/v2/everything"
         params = {
-            "q": company + " stock OR finance OR market",
+            "q": f"{company} finance",
             "apiKey": api_key,
             "language": "en",
             "sortBy": "publishedAt",  # most recent first
