@@ -1,0 +1,16 @@
+langchain
+langchain-community
+langchain-core
+langchain-groq
+langchain-google-genai
+langgraph
+yfinance
+python-dotenv
+streamlit
+newsapi-python
+requests
+plotly
+scipy
+numpy
+pandas
+textblob
