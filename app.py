@@ -189,6 +189,119 @@ def plot_comparison_bar(ticker1: str, ticker2: str):
     except:
         return None
 
+
+# ── Risk Profiling Section ────────────────────────────────
+if "risk_profile_done" not in st.session_state:
+    st.session_state.risk_profile_done = False
+if "risk_profile" not in st.session_state:
+    st.session_state.risk_profile = None
+
+if not st.session_state.risk_profile_done:
+    st.markdown("## 🎯 Let's Set Up Your Investor Profile First")
+    st.markdown("*Answer 5 quick questions so FinBot can personalize all advice for you*")
+    st.markdown("---")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        horizon = st.radio(
+            "⏰ Investment Horizon — How long can you stay invested?",
+            options=[
+                ("Less than 1 year", 1),
+                ("1 to 3 years", 2),
+                ("3 to 5 years", 3),
+                ("More than 5 years", 4)
+            ],
+            format_func=lambda x: x[0]
+        )
+
+        loss = st.radio(
+            "📉 Loss Tolerance — How much loss can you handle?",
+            options=[
+                ("Cannot tolerate any loss", 1),
+                ("Up to 10% loss is okay", 2),
+                ("Up to 25% loss is okay", 3),
+                ("More than 25% is fine", 4)
+            ],
+            format_func=lambda x: x[0]
+        )
+
+        income = st.radio(
+            "💰 Monthly Income Range",
+            options=[
+                ("Under ₹25,000", 1),
+                ("₹25,000 - ₹50,000", 2),
+                ("₹50,000 - ₹1,00,000", 3),
+                ("Over ₹1,00,000", 4)
+            ],
+            format_func=lambda x: x[0]
+        )
+
+    with col2:
+        experience = st.radio(
+            "📚 Market Experience",
+            options=[
+                ("Complete beginner", 1),
+                ("Some knowledge", 2),
+                ("Experienced investor", 3),
+                ("Professional/Expert", 4)
+            ],
+            format_func=lambda x: x[0]
+        )
+
+        goal = st.radio(
+            "🎯 Investment Goal",
+            options=[
+                ("Preserve my capital safely", 1),
+                ("Get regular dividend income", 2),
+                ("Grow wealth steadily", 3),
+                ("Maximum aggressive growth", 4)
+            ],
+            format_func=lambda x: x[0]
+        )
+
+    st.markdown("---")
+    if st.button("🚀 Generate My Risk Profile & Start FinBot",
+                 use_container_width=True):
+        answers = f"horizon:{horizon[1]},loss:{loss[1]},income:{income[1]},experience:{experience[1]},goal:{goal[1]}"
+
+        with st.spinner("Analyzing your risk profile..."):
+            from tools.risk_profiler import get_risk_profile
+            profile_result = get_risk_profile.invoke(answers)
+
+        st.session_state.risk_profile = profile_result
+        st.session_state.risk_profile_done = True
+
+        # Add profile to chat history so agent knows it
+        from agent import chat_history
+        from langchain_core.messages import HumanMessage, AIMessage
+        chat_history.append(HumanMessage(
+            content=f"My investor risk profile: {profile_result}"
+        ))
+        chat_history.append(AIMessage(
+            content="I have noted your risk profile. All my advice will be tailored to your specific investor type, risk tolerance, and financial goals."
+        ))
+        st.rerun()
+
+    st.stop()  # Don't show chat until profile is done
+
+# Show risk profile in sidebar
+if st.session_state.risk_profile:
+    with st.sidebar:
+        st.markdown("### 👤 Your Risk Profile")
+        if "CONSERVATIVE" in st.session_state.risk_profile:
+            st.success("🛡️ Conservative Investor")
+        elif "MODERATE" in st.session_state.risk_profile:
+            st.warning("⚖️ Moderate Investor")
+        else:
+            st.error("🚀 Aggressive Investor")
+
+        if st.button("🔄 Retake Profile", use_container_width=True):
+            st.session_state.risk_profile_done = False
+            st.session_state.risk_profile = None
+            st.session_state.messages = []
+            st.rerun()
+
 # ── Sidebar ──────────────────────────────────────────────
 with st.sidebar:
     st.markdown("## 🤖 FinBot")
