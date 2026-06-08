@@ -17,11 +17,15 @@ from tools.portfolio_optimization import optimize_portfolio
 
 load_dotenv()
 
+groq_key = os.getenv("GROQ_API_KEY")
+if not groq_key:
+    raise ValueError("GROQ_API_KEY not found.")
+
 # ── 1. Brain ─────────────────────────────────────────────
 llm = ChatGroq(
     model="llama-3.3-70b-versatile",
     temperature=0,
-    api_key=os.getenv("GROQ_API_KEY")
+    api_key=groq_key
 )
 
 # ── 2. All 9 Tools ───────────────────────────────────────
