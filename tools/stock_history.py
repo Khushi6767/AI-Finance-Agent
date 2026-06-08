@@ -4,12 +4,9 @@ from langchain_core.tools import tool
 @tool
 def get_stock_history(input_str: str) -> str:
     """
-    Use this tool to get the historical price performance of a stock
-    over a time period. Input should be in format 'TICKER PERIOD' where
-    TICKER is the stock symbol and PERIOD is one of: 1wk, 1mo, 3mo, 6mo, 1y.
-    Examples: 'AAPL 1mo', 'TSLA 3mo', 'RELIANCE.NS 1wk'.
-    Use this when user asks how a stock has performed recently,
-    whether it is trending up or down, or wants to see price history.
+    Gets historical price performance of a stock.
+    Input format is TICKER PERIOD like: AAPL 1mo or HDFCBANK.NS 3mo
+    Valid periods: 1wk, 1mo, 3mo, 6mo, 1y
     """
     try:
         # Split input into ticker and period

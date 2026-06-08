@@ -4,11 +4,9 @@ from langchain_core.tools import tool
 @tool
 def get_stock_price(ticker: str) -> str:
     """
-    Use this tool to get the current live stock price of any company.
-    Input must be a valid stock ticker symbol like AAPL for Apple,
-    TSLA for Tesla, MSFT for Microsoft, GOOGL for Google, RELIANCE.NS
-    for Reliance Industries (Indian stocks end with .NS).
-    Returns current price, day high, day low, and market cap.
+    Gets the current live stock price of any company.
+    Input is a stock ticker symbol.
+    Examples: AAPL, TSLA, MSFT, GOOGL, HDFCBANK.NS, RELIANCE.NS, TCS.NS
     """
     try:
         stock = yf.Ticker(ticker.upper())

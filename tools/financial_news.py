@@ -8,9 +8,8 @@ load_dotenv()
 @tool
 def get_financial_news(company: str) -> str:
     """
-    Fetches latest financial news about a company or topic.
-    Input is a simple company name or topic string.
-    Examples: 'Apple', 'Tesla', 'Reliance', 'cryptocurrency', 'inflation'.
+    Fetches latest financial news about a company.
+    Input is a simple company name like Apple, Tesla, HDFC Bank, Reliance.
     """
     try:
         api_key = os.getenv("NEWS_API_KEY")
